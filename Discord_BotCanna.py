@@ -36,39 +36,6 @@ async def on_message(message):
         await message.channel.send(random.choice(greetings))
     await client.process_commands(message)
 
-# GETS THE LATEST COINDEAL INFO FROM THEIR API
-@client.command(name='getcoindeal', hidden=True)
-async def getcoindeal(ctx):
-    '''This will show the current price info on CoinDeal'''
-    url = 'https://coinmarketcap.coindeal.com/api/v1/ticker'
-    try:
-        response = requests.get(url,headers={'Accept': 'application/json'},)
-    except:
-        pass
-    else:
-        data = response.json()
-        array_prices = data['BCNA_BTC']
-        btc_usd_prices = data['BTC_USDT']
-        # btc_eur_prices = data['BTC_EUR']
-        last_price = float(array_prices['last'])
-        volume = float(array_prices['quoteVolume'])
-        high_price = float(array_prices['high24hr'])
-        high_bid = float(array_prices['highestBid'])
-        lowest_ask = float(array_prices['lowestAsk'])
-        base_volume = float(array_prices['baseVolume'])
-        price_usd = float(float(array_prices['last']) * float(btc_usd_prices['last']))
-        # price_eur = float(float(array_prices['last']) * float(btc_eur_prices['last']))
-        embed=discord.Embed(title='BCNA / BTC at CoinDeal', url='https://frontend.coindeal.com/market/BCNA-BTC/', color=0x74ECF7)
-        embed.set_thumbnail(url='https://static.coindeal.com/landing-page-assets/favicons/apple-icon-120x120.png')
-        embed.add_field(name='Price BTC', value=('{:>0.8f}'.format(last_price)+' BTC'), inline=True)
-        embed.add_field(name='Price USD', value=('{:>0.4f}'.format(price_usd)+' USD'), inline=True)
-        embed.add_field(name='Volume', value=('{:>0.8f}'.format(volume)+' BTC'), inline=True)
-        embed.add_field(name='Base volume', value=('{:>0.0f}'.format(base_volume)+' BCNA'), inline=True)
-        embed.add_field(name='Highest bid', value=('{:>0.8f}'.format(high_bid)+' BTC'), inline=True)
-        embed.add_field(name='Lowest ask', value=('{:>0.8f}'.format(lowest_ask)+' BTC'), inline=True)
-        embed.add_field(name='High price 24h', value=('{:>0.8f}'.format(high_price)+' BTC'), inline=False)
-        await ctx.message.channel.send(embed=embed)
-
 # IS USED FOR THE FAUCET FUNCTION. USER SENDS THEIR ADDRESS IT COINS WILL BE DISTRIBUTED AUTOMATICALLY.
 # WILL ONLY WORK IF THE USER HAS THE ROLE INVITATIONAL TESTER, THIS WAY WE CAN PREVENT REGULAR USERS TO USE THIS COMMAND.
 @client.command(name='claim', hidden=True)
